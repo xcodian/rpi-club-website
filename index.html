@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>root@rpi-club on (tty1)</title>
+
+    <script>
+        // shell so far
+        let content = 'Welcome to the Raspberry Pi Club Website!\nType "help" for command help.\n';
+
+        // what the user has typed in
+        let buffer = '';
+
+        // prefix before the line
+        const prefix = '<span style="color: #ff5454">root@rpi-club</span> ~<span style="color: #ff5454">#</span> ';
+
+        // command mappings
+        const callback = {
+            'clear': cmd_clearScreen,
+            'help': cmd_showHelp,
+            'credits': cmd_showCredits,
+        }
+
+        // puts the content to the html element
+        function refresh() {
+            const shell = document.getElementById('shell');
+            shell.innerHTML = content + prefix + buffer + '_';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // manage keypresses
+        document.onkeydown = function (e) {
+            e = e || window.event;
+            var k = e.key;
+
+            if (e.key.length === 1) {
+                buffer += k;
+
+            } else if (k === 'Enter' && buffer.length > 0) {
+                // show the prefix once more
+                content += prefix + buffer + '\n';
+
+                // get command from callback
+                const func = callback[buffer];
+                if (func === undefined) {
+                    // function does not exist
+                    content += 'sh: command not found: "'+ buffer +'"\n'
+                } else {
+                    // run the found function
+                    func();
+                }
+                // clear the buffer ready for the new command
+                buffer = '';
+            } else if (k === 'Backspace' && buffer.length > 0) {
+                // remove last char from buffer
+                buffer = buffer.slice(0, buffer.length - 1)
+            }
+            // refresh the screen
+            refresh();
+        };
+
+        // COMMANDS
+
+        // clears the screen
+        function cmd_clearScreen() { content = ''; }
+
+        // shows the help message
+        function cmd_showHelp() {
+            content +=
+                'Command Help\n' +
+                '='.repeat(50) +
+                '\nhelp - shows this message' +
+                '\nclear - clears the screen' +
+                '\ncredits - information about this website\n' +
+                '='.repeat(50) + '\n';
+        }
+
+        // shows who made this website :thatsok:
+        function cmd_showCredits() {
+            content +=
+                'Raspberry Pi Club Website\n' +
+                '='.repeat(50) +
+                '\n2020 Martin Velikov & Patrick Thompson' +
+                '\nGitHub: github.com/xxcodianxx/rpi-club-website\n' +
+                '='.repeat(50) + '\n';
+        }
+    </script>
+
+    <style type="text/css">
+        html {
+            width: calc(100% - 5px);
+            height: calc(100% - 5px);
+
+            background: black;
+            color: white;
+            font-family: Inconsolata, serif;
+            font-size: 12pt;
+
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body onload="refresh()">
+<p id="shell" style="white-space: pre-wrap"></p>
+</body>
+</html>
