@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>root@rpi-club on (tty1)</title>
-    <link href="https://fonts.googleapis.com/css2&family=Source+Code+Pro&display=swap" rel="stylesheet"> 
+    <title>root@rpi-club (on tty1)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png"/>
 
     <script>
         // shell so far
@@ -33,7 +34,6 @@
 
             'uname': cmd_uname,
         }
-
         const filemap = {
             "secret.txt": "You found me!",
             "bruh.txt": "bruh",
@@ -102,7 +102,7 @@
                 'Raspberry Pi Club Website\n' +
                 '='.repeat(50) +
                 '\n2020 Martin Velikov & Patrick Thompson' +
-                '\nGitHub: github.com/xxcodianxx/rpi-club-website\n' +
+                '\nSource Code: <a href="https://github.com/xxcodianxx/rpi-club-website">xxcodianxx/rpi-club-website</a>\n' +
                 '='.repeat(50) + '\n';
         }
 
@@ -127,7 +127,7 @@
 
         function cmd_uname() {
             if (buffer.split(" ").length > 1 && buffer.split(" ")[1] == "-a") {
-                content += "ToasterOs arch-toaster 1.0.4-toast1-1 #1 PREEMPT Mon, 1 Jan 1990 00:00:00 +0000 x86_64 GNU/Wholegrain\n"
+                content += "ToasterOs rpi-club 1.0.4-toast1-1 #1 PREEMPT Mon, 1 Jan 1990 00:00:00 +0000 x86_64 GNU/Wholegrain\n"
             } else {
                 content += "ToasterOs\n"
             }
@@ -141,10 +141,14 @@
 
             background: black;
             color: white;
-            font-family: "Source Code Pro", serif;
+            font-family: "Ubuntu Mono", monospace;
             font-size: 12pt;
 
             overflow: hidden;
+        }
+
+        a {
+            color: #4b89ff;
         }
     </style>
 </head>
