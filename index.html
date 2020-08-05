@@ -15,6 +15,9 @@
         // prefix before the line
         const prefix = '<span style="color: #ff5454">root@rpi-club</span> ~<span style="color: #ff5454">#</span> ';
 
+        let history = [];
+        let cHist = 0;
+
         // command mappings
         const callback = {
             'clear': cmd_clearScreen,
@@ -50,6 +53,16 @@
         document.onkeydown = function (e) {
             e = e || window.event;
             var k = e.key;
+            if (k === "ArrowUp" && cHist < history.length) {
+                buffer = history[cHist]
+                cHist += 1
+            }
+            if (k === "ArrowDown" && cHist === 0) {
+                buffer = ""
+            } else if (k === "ArrowDown" && cHist-1 >= 0) {
+                cHist -= 1
+                buffer = history[cHist]
+            }
 
             if (e.key.length === 1) {
                 buffer += k;
@@ -57,6 +70,9 @@
             } else if (k === 'Enter' && buffer.length > 0) {
                 // show the prefix once more
                 content += prefix + buffer + '\n';
+
+                // set current position in history to 0
+                cHist = 0
 
                 // get command from callback
                 const func = callback[buffer.split(" ")[0]];
@@ -66,6 +82,7 @@
                 } else {
                     // run the found function
                     func();
+                    history.unshift(buffer)
                 }
                 // clear the buffer ready for the new command
                 buffer = '';
