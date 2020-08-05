@@ -19,12 +19,19 @@
             'clear': cmd_clearScreen,
             'help': cmd_showHelp,
             'credits': cmd_showCredits,
+            'ls': cmd_listDir,
+            'cat': cmd_readFile,
+        }
+
+        const filemap = {
+            "secret.txt": "You found me!",
+            "bruh.txt": "bruh",
         }
 
         // puts the content to the html element
         function refresh() {
             const shell = document.getElementById('shell');
-            shell.innerHTML = content + prefix + buffer + '_';
+            shell.innerHTML = content + prefix + buffer + '_'.blink();
             window.scrollTo(0, document.body.scrollHeight);
         }
 
@@ -41,7 +48,7 @@
                 content += prefix + buffer + '\n';
 
                 // get command from callback
-                const func = callback[buffer];
+                const func = callback[buffer.split(" ")[0]];
                 if (func === undefined) {
                     // function does not exist
                     content += 'sh: command not found: "'+ buffer +'"\n'
@@ -83,6 +90,25 @@
                 '\n2020 Martin Velikov & Patrick Thompson' +
                 '\nGitHub: github.com/xxcodianxx/rpi-club-website\n' +
                 '='.repeat(50) + '\n';
+        }
+
+        function cmd_listDir() {
+            for (key in filemap) {
+                content+=key+"  "
+            }
+            content += "\n"
+        }
+
+        function cmd_readFile() {
+            if ((buffer.split(" ").length < 1)) {
+                content += 'sh: file not specified\n'
+            } else {
+            var f = filemap[buffer.split(" ")[1]]
+            if (f === undefined) {
+                content += 'sh: file not found: "'+ buffer.slice(3,buffer.length) +'"\n'
+            } else {
+                content += f + "\n"
+            }}
         }
     </script>
 
