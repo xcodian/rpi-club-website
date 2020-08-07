@@ -1,176 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+<meta charset="UTF-8">
+
 <head>
-    <meta charset="UTF-8">
     <title>root@rpi-club (on tty1)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" >
     <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
-    <script>
-        // shell so far
-        let content = 'Welcome to the Raspberry Pi Club Website!\nType "help" for command help.\n';
-
-        // what the user has typed in
-        let buffer = '';
-
-        // prefix before the line
-        const prefix = '<span style="color: #ff5454">root@rpi-club</span> ~<span style="color: #ff5454">#</span> ';
-
-        let history = [];
-        let cHist = 0;
-
-        // command mappings
-        const callback = {
-            'clear': cmd_clearScreen,
-            'help': cmd_showHelp,
-
-            'clear': cmd_clearScreen,
-            'cls': cmd_clearScreen,
-
-            'credits': cmd_showCredits,
-
-            'ls': cmd_listDir,
-            'dir': cmd_listDir,
-
-            'cat': cmd_readFile,
-            'show': cmd_readFile,
-
-            'uname': cmd_uname,
-        }
-        const filemap = {
-            "secret.txt": "You found me!",
-            "bruh.txt": "bruh",
-        }
-
-        // puts the content to the html element
-        function refresh() {
-            const shell = document.getElementById('shell');
-            shell.innerHTML = content + prefix + buffer + '_'.blink();
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
-        // manage keypresses
-        document.onkeydown = function (e) {
-            e = e || window.event;
-            var k = e.key;
-            if (k === "ArrowUp" && cHist < history.length) {
-                buffer = history[cHist]
-                cHist += 1
-            }
-            if (k === "ArrowDown" && cHist === 0) {
-                buffer = ""
-            } else if (k === "ArrowDown" && cHist-1 >= 0) {
-                cHist -= 1
-                buffer = history[cHist]
-            }
-
-            if (e.key.length === 1) {
-                buffer += k;
-
-            } else if (k === 'Enter' && buffer.length > 0) {
-                // show the prefix once more
-                content += prefix + buffer + '\n';
-
-                // set current position in history to 0
-                cHist = 0
-
-                // get command from callback
-                const func = callback[buffer.split(" ")[0]];
-                if (func === undefined) {
-                    // function does not exist
-                    content += 'sh: command not found: "'+ buffer +'"\n'
-                } else {
-                    // run the found function
-                    func();
-                    history.unshift(buffer)
-                }
-                // clear the buffer ready for the new command
-                buffer = '';
-            } else if (k === 'Backspace' && buffer.length > 0) {
-                // remove last char from buffer
-                buffer = buffer.slice(0, buffer.length - 1)
-            }
-            // refresh the screen
-            refresh();
-        };
-
-        // COMMANDS
-
-        // clears the screen
-        function cmd_clearScreen() { content = ''; }
-
-        // shows the help message
-        function cmd_showHelp() {
-            content +=
-                'Command Help\n' +
-                '='.repeat(50) +
-                '\nhelp - shows this message' +
-                '\nclear - clears the screen' +
-                '\ncredits - information about this website' +
-                '\nls - lists files in current directory' +
-                '\ncat - reads the contents of a file' +
-                '\nuname - prints information about the os, use uname -a for more info\n' +
-                '='.repeat(50) + '\n';
-        }
-
-        // shows who made this website :thatsok:
-        function cmd_showCredits() {
-            content +=
-                'Raspberry Pi Club Website\n' +
-                '='.repeat(50) +
-                '\n2020 Martin Velikov & Patrick Thompson' +
-                '\nSource Code: <a href="https://github.com/xxcodianxx/rpi-club-website">xxcodianxx/rpi-club-website</a>\n' +
-                '='.repeat(50) + '\n';
-        }
-
-        function cmd_listDir() {
-            for (key in filemap) {
-                content += key + "  "
-            }
-            content += "\n"
-        }
-
-        function cmd_readFile() {
-            if ((buffer.split(" ").length < 1)) {
-                content += 'sh: file not specified\n'
-            } else {
-            var f = filemap[buffer.split(" ")[1]]
-            if (f === undefined) {
-                content += 'sh: file not found: "'+ buffer.slice(3, buffer.length).trimLeft() +'"\n'
-            } else {
-                content += f + "\n"
-            }}
-        }
-
-        function cmd_uname() {
-            if (buffer.split(" ").length > 1 && buffer.split(" ")[1] == "-a") {
-                content += "ToasterOs rpi-club 1.0.4-toast1-1 #1 PREEMPT Mon, 1 Jan 1990 00:00:00 +0000 x86_64 GNU/Wholegrain\n"
-            } else {
-                content += "ToasterOs\n"
-            }
-        }
-    </script>
-
-    <style type="text/css">
-        html {
-            width: calc(100% - 5px);
-            height: calc(100% - 5px);
-
-            background: black;
-            color: white;
-            font-family: "Ubuntu Mono", monospace;
-            font-size: 12pt;
-
-            overflow: hidden;
-        }
-
-        a {
-            color: #4b89ff;
-        }
-    </style>
+    <script type="text/javascript" src="shbase.js"></script>
+    <script type="text/javascript" src="home.js"></script>
 </head>
 
+<style type="text/css" src="style.css"></style>
 <body onload="refresh()">
-<p id="shell" style="white-space: pre-wrap"></p>
+    <p id="shell" style="white-space: pre-wrap"></p>
 </body>
 </html>

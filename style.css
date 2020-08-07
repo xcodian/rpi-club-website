@@ -1,0 +1,13 @@
+html {
+    width: calc(100% - 5px);
+    height: calc(100% - 5px);
+
+    background: black;
+    color: white;
+    font-family: "Ubuntu Mono", monospace;
+    font-size: 12pt;
+
+    overflow: hidden;
+}
+
+a { color: #4b89ff; }
